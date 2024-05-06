@@ -1,11 +1,15 @@
 const express = require("express");
 const axios = require("axios");
+const cors = require("cors");
+const morgan = require("morgan");
 const db = require("./config/database.js");
 const transactionsRoute = require("./routes/transactions.route.js");
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.use(morgan("dev"));
 
 app.use("/transactions", transactionsRoute);
 
