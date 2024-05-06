@@ -16,8 +16,9 @@ const getAllTransactions = async (req, res) => {
   total = rows.total;
   const page = parseInt(req.query.page || 1);
   const limit = parseInt(req.query.limit || 10);
+  const search = req.query.search || "";
   const offset = (page - 1) * limit;
-  const getAllTransactionsQuery = `SELECT * FROM transactions LIMIT ${limit} OFFSET ${offset}`;
+  const getAllTransactionsQuery = `SELECT * FROM transactions WHERE title LIKE '%${search}%'  LIMIT ${limit} OFFSET ${offset} `;
   const lastPage = Math.ceil(total / limit);
 
   const data = await new Promise((resolve, reject) => {
@@ -59,7 +60,7 @@ const getTransaction = async (req, res) => {
 
 const getMonthTransactions = async (req, res) => {
   const { month } = req.params;
-  console.log("month", month);
+  // console.log("month", month);
 
   const query = `
     SELECT
@@ -85,6 +86,7 @@ const getMonthTransactions = async (req, res) => {
 };
 
 const getPriceRanges = async (req, res) => {
+  const { month } = req.params;
   const query = `
     SELECT
     price_range,
@@ -108,6 +110,8 @@ FROM
             END AS price_range
         FROM 
             transactions
+        WHERE
+            strftime('%m', dateOfSale) = '${month}'
     ) AS price_ranges
 GROUP BY
     price_range
