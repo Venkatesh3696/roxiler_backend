@@ -43,7 +43,7 @@ const getAllTransactions = async (req, res) => {
 
 const getTransaction = async (req, res) => {
   const { id } = req.params;
-  const query = ` SELECT * FROM transactions WHERE id LIKE ${id}`;
+  const query = ` SELECT * FROM transactions WHERE id LIKE '${id}'`;
   const data = await new Promise((resolve, reject) => {
     db.get(query, (err, rows) => {
       if (err) {
@@ -54,7 +54,7 @@ const getTransaction = async (req, res) => {
       console.log(rows);
     });
   });
-  console.log(data);
+  // console.log(data);
   res.send({
     data,
   });
@@ -72,7 +72,7 @@ const getMonthTransactions = async (req, res) => {
     FROM transactions
     WHERE strftime('%m',dateOfSale) = '${month}';
     `;
-  console.log("query", query);
+  // console.log("query", query);
   const data = await new Promise((resolve, reject) => {
     db.get(query, (err, rows) => {
       if (err) {
